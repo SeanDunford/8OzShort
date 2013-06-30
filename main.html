@@ -19,7 +19,7 @@
 <input type='text' id='messageInput' placeholder='Message...'>
 <script>
   $(document).ready(function() {
- /* // Get a reference to the root of the chat data.
+  // Get a reference to the root of the chat data.
   var messagesRef = new Firebase('https://w3fwx3bsdin.firebaseio-demo.com/');
 
   // When the user presses enter on the message input, write the message to firebase.
@@ -27,7 +27,7 @@
     if (e.keyCode == 13) {
       var name = $('#nameInput').val();
       var text = $('#messageInput').val();
-      .push({name:name, text:text});
+      messagesRef.push({name:name, text:text});
           $('#messageInput').val('');
     }
   });
@@ -39,7 +39,6 @@
       .text(message.name+': ')).appendTo($('#messagesDiv'));
     $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
   });
-  */
 
   // set up the map
   map = new L.Map('map');
