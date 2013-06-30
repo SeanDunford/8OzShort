@@ -21,6 +21,7 @@
             $(document).ready(function() {
                 // Get a reference to the root of the chat data.
                 var messagesRef = new Firebase('https://w3fwx3bsdin.firebaseio-demo.com/');
+                var usersRef = new Firebase('https://w3fwx3bsdin.firebaseio-demo.com/users');
 
                 // When the user presses enter on the message input, write the message to firebase.
                 $('#messageInput').keypress(function (e) {
@@ -54,7 +55,9 @@
                     var latitude = position.coords.latitude;
                     var longitude = position.coords.longitude;
                     map.setView(new L.LatLng(latitude, longitude), 14);
+                    usersRef.push({name:name, latitude:latitude, longitude:longitude});
                 }
+
                 function getLocation() {
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(showPosition);
