@@ -20,7 +20,7 @@
         <script>
             $(document).ready(function() {
                 // Get a reference to the root of the chat data.
-                var messagesRef = new Firebase('https://8ozshort.firebaseIO.com/');
+                var messagesRef = new Firebase('https://8ozshort.firebaseIO.com/messages');
                 var usersRef = new Firebase('8ozshort.firebaseIO.com/users');
                 // When the user presses enter on the message input, write the message to firebase.
                 $('#messageInput').keypress(function (e) {
