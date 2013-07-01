@@ -19,6 +19,8 @@
         <input type='text' id='messageInput' placeholder='Message...'>
         <script>
             $(document).ready(function() {
+                var myId;
+
                 // Get a reference to the root of the chat data.
                 var messagesRef = new Firebase('https://8ozshort.firebaseIO.com/messages');
                 var usersRef = new Firebase('8ozshort.firebaseIO.com/users');
@@ -29,6 +31,13 @@
                         var text = $('#messageInput').val();
                         messagesRef.push({name:name, text:text});
                         $('#messageInput').val('');
+
+                        usersRef.push({
+                            name:name, 
+                            latitude:latitude, 
+                            longitude:longitude,
+                            timestamp: new Date().getTime()
+                        })
                     }
                 });
 
@@ -54,15 +63,19 @@
                     var latitude = position.coords.latitude;
                     var longitude = position.coords.longitude;
                     map.setView(new L.LatLng(latitude, longitude), 14);
-                    usersRef.push({name:name, latitude:latitude, longitude:longitude});
+                    var name = $('#nameInput').val();
+                    var me = usersRef.push({
+                        name:name, 
+                        latitude:latitude, 
+                        longitude:longitude,
+                        timestamp: new Date().getTime()
+                    });
+                    var myId = me.name();
                 }
 
-                function getLocation() {
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(showPosition);
-                    }
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
                 }
-                getLocation();
             });
         </script>
     </body>
