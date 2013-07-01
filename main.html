@@ -21,7 +21,6 @@
             $(document).ready(function() {
                 // Get a reference to the root of the chat data.
                 var messagesRef = new Firebase('https://www.8ozshort.firebaseIO.com/');
-
                 // When the user presses enter on the message input, write the message to firebase.
                 $('#messageInput').keypress(function (e) {
                     if (e.keyCode == 13) {
