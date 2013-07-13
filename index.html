@@ -13,6 +13,11 @@
         </style>
         <script type="text/javascript" src="scripts/twitterHelper.jsm"></script>
         <script type="text/javascript" src="scripts/proxyChat.js"></script>
+        <script typr="text/javascript">
+            window.onload = function (event) {
+            proxyChat.appOpened();     
+        }
+        </script>
          </head>
     <body>
         <div id="map"></div>
@@ -20,71 +25,5 @@
         <input type='text' id='nameInput' placeholder='Name'>
         <input type='text' id='messageInput' placeholder='Message...'>
         <input type='text' id='PINFIELD'>pIN</input>
-        <script>
-            $(document).ready(function() {
-                var myId;
-                var chatroom = 1; 
-                // Get a reference to the root of the chat data.
-                if(chatroom === 0){
-                var messagesRef = new Firebase('https://8ozshort.firebaseIO.com/chatRoom1');
-                }
-                else if(chatroom === 1){
-                var messagesRef = new Firebase('https://8ozshort.firebaseIO.com/chatRoom2');  
-                }
-                var usersRef = new Firebase('8ozshort.firebaseIO.com/users');
-                // When the user presses enter on the message input, write the message to firebase.
-                $('#messageInput').keypress(function (e) {
-                    if (e.keyCode == 13) {
-                        var name = $('#nameInput').val();
-                        var text = $('#messageInput').val();
-                        messagesRef.push({name:name, text:text});
-                        $('#messageInput').val('');
-
-                        usersRef.push({
-                            name:name, 
-                            latitude:latitude, 
-                            longitude:longitude,
-                            timestamp: new Date().getTime()
-                        })
-                    }
-                });
-
-                // Add a callback that is triggered for each chat message.
-                messagesRef.limit(10).on('child_added', function (snapshot) {
-                    var message = snapshot.val();
-                    $('<div/>').text(message.text).prepend($('<em/>')
-                            .text(message.name+': ')).appendTo($('#messagesDiv'));
-                    $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
-                });
-
-                // set up the map
-                map = new L.Map('map');
-
-                // create the tile layer with correct attribution
-                var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-                var osmAttrib='Map data © OpenStreetMap contributors';
-                var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18, attribution: osmAttrib});       
-
-                map.addLayer(osm);
-
-                function showPosition(position) {
-                    var latitude = position.coords.latitude;
-                    var longitude = position.coords.longitude;
-                    map.setView(new L.LatLng(latitude, longitude), 14);
-                    var name = $('#nameInput').val();
-                    var me = usersRef.push({
-                        name:name, 
-                        latitude:latitude, 
-                        longitude:longitude,
-                        timestamp: new Date().getTime()
-                    });
-                    var myId = me.name();
-                }
-
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(showPosition);
-                }
-            });
-        </script>
     </body>
 </html>
