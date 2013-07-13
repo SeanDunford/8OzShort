@@ -5,9 +5,11 @@ proxyChat.appOpened = function() {
 	proxyChat.initChatroom(); 
 	proxyChat.initMap(); 
 }	
+
 proxyChat.changeMapLocation = function(location){
 	map = L.map('map').setView([51.505, -0.09], 13);
 }
+
 proxyChat.initChatroom = function(chatroom){
 	var myId;
 	chatroom = 1; 
@@ -43,10 +45,10 @@ proxyChat.initChatroom = function(chatroom){
 	$('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
 	});
 }
+
 proxyChat.initMap = function(location){
 	// set up the map
-	var map = L.map('map').setView([51.505, -0.09], 13);
-	console.log(map); 
+	map = L.map('map').setView([51.505, -0.09], 13);
 
 	// create the tile layer with correct attribution
 	var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -64,17 +66,31 @@ proxyChat.initMap = function(location){
     [51.503, -0.06],
     [51.51, -0.047]
 	]).addTo(map);
+
+	map.on('click', proxyChat.onMapClick);
 }
+
 proxyChat.OpenStreetMapTileLayer = function(){
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 }
-proxyChat.setMapToCurrentPostion = function(position) {
+
+proxyChat.setMapToCurrentPostion = function() {
+		if (!navigator.geolocation) 
+			return false; 
+		else
+		navigator.geolocation.getCurrentPosition(proxyChat.showPosition);	
+}
+
+proxyChat.showPosition = function(position) {
+	map.setView([51.505, -0.09], 13);
 	var latitude = position.coords.latitude;
 	var longitude = position.coords.longitude;
+
 	map.setView(new L.LatLng(latitude, longitude), 14);
 	var name = $('#nameInput').val();
+	var usersRef = new Firebase('8ozshort.firebaseIO.com/users');
 	var me = usersRef.push({
 		name:name, 
 		latitude:latitude, 
@@ -82,9 +98,45 @@ proxyChat.setMapToCurrentPostion = function(position) {
 		timestamp: new Date().getTime()
 	});
 	var myId = me.name();
+}
 
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(showPosition);
-	}
+proxyChat.onMapClick = function(e) {
+	//proxyChat.placePopup(e.latlng); 
+	proxyChat.placeMarker(e.latlng.lat, e.latlng.lng); 
+}
+proxyChat.placePopup = function(latlng){
+var popup = L.popup();
+    popup
+        .setLatLng(latlng)
+        .setContent("You clicked the map at " + latlng.toString())
+        .openOn(map);
+		var popup = L.popup();
+}
 
+proxyChat.placeMarker = function (lattitude, longitude) {
+	var marker = L.marker([lattitude, longitude])
+	marker.bindPopup(proxyChat.generatePopupText()).openPopup();
+	marker.addTo(map);
+}
+
+proxyChat.placeCircle = function (lattitude, longitude) {
+	var marker = L.marker([lattitude, longitude])
+	marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+	marker.addTo(map);
+}
+proxyChat.placePolygon = function (lattitude, longitude) {
+	
+}	
+function foo(chatName){
+	console.log(chatName); 
+}
+proxyChat.generatePopupText = function (name, description) {
+    'use strict';
+    var source, template, context, html;
+    source   = $("#handleBarsTest").html();
+    template = Handlebars.compile(source);
+    context = {chatName: name, chatDescription: description};
+    html    = template(context);
+    console.log(html); 
+    return html;
 }
