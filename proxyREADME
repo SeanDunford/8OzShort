@@ -1,0 +1,25 @@
+virtualenv envDev
+source envdev/bin/activate
+pip install paste webob wsgiproxy docopt
+python proxy.py "directoryWithHTML"
+
+
+if index.html
+use http://127.0.0.1:8080/
+
+if other.html
+use http://127.0.0.1:8080/
+
+if ./dir1/dir2/file.html
+use http://127.0.0.1:8080/dir1/dir2/file.html
+
+When running in browser execute ajax with 
+
+$.ajax({
+  url: "http://127.0.0.1:8080/?proxy="+encodeURIComponent("http://dev.knotch.it:8080/miniProject/user_feed/500e3b57bbcd08696800000a/1"),
+  context: document.body
+}).done(function(data) {
+  console.log(data);
+});
+
+"http://127.0.0.1:8080/?proxy="+encodeURIComponent("http://dev.knotch.it:8080/miniProject/user_feed/500e3b57bbcd08696800000a/1"
