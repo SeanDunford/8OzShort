@@ -70,7 +70,7 @@ proxyChat.OpenStreetMapTileLayer = function(){
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 }
-proxyChat.showPosition = function(position) {
+proxyChat.setMapToCurrentPostion = function(position) {
 	var latitude = position.coords.latitude;
 	var longitude = position.coords.longitude;
 	map.setView(new L.LatLng(latitude, longitude), 14);
@@ -86,4 +86,5 @@ proxyChat.showPosition = function(position) {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(showPosition);
 	}
+
 }
